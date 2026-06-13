@@ -1,36 +1,33 @@
-package com.abu.auditflow.role.entity;
+package com.abu.auditflow.auth.entity;
 
 import java.time.Instant;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "roles", schema = "auth")
+@Table(name = "identities", schema = "auth")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Role {
-
+public class Identity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String code;
+    @Column(name = "user_id")
+    private Long userId;
 
-    private String name;
+    private String provider;
+
+    private String providerUserId;
+
     private Instant createdAt;
-    private Instant updatedAt;
-
-    @PrePersist
-    void prePersist() {
-        createdAt = Instant.now();
-    }
 }

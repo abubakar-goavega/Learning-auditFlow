@@ -16,11 +16,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.abu.auditflow.security.handler.JwtAccessDeniedHandler;
-import com.abu.auditflow.security.handler.JwtAuthenticationEntryPoint;
-import com.abu.auditflow.security.jwt.JwtAuthenticationFilter;
-import com.abu.auditflow.security.jwt.JwtProperties;
-import com.abu.auditflow.security.userdetails.CustomUserDetailsService;
+import com.abu.auditflow.auth.security.handler.JwtAccessDeniedHandler;
+import com.abu.auditflow.auth.security.handler.JwtAuthenticationEntryPoint;
+import com.abu.auditflow.auth.security.jwt.JwtAuthenticationFilter;
+import com.abu.auditflow.auth.security.jwt.JwtProperties;
+import com.abu.auditflow.auth.security.userdetails.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
@@ -120,11 +120,8 @@ public class SecurityConfig {
 
                                                 .requestMatchers(
                                                                 "/",
-                                                                "/login",
-                                                                "/public",
                                                                 "/about",
                                                                 "/auth/**"
-
                                                 )
                                                 .permitAll()
 
