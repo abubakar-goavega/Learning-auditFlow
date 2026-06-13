@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002
+      author: abubakar
+
+      changes:
+        - loadData:
+            file: db/changelog/seed/roles.csv
+            tableName: roles
+
+        - loadData:
+            file: db/changelog/seed/audit_status.csv
+            tableName: audit_status
+        
+        - loadData:
+            file: db/changelog/seed/users.csv
+            tableName: users

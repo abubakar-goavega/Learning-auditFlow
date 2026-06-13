@@ -1,0 +1,15 @@
+{
+  "java.autobuild.enabled": false,
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "java.import.gradle.offline.enabled": true,
+  "java.import.maven.enabled": false,
+  "files.watcherExclude": {
+    "**/.gradle/**": true,
+    "**/build/**": true
+  },
+   "yaml.validate": true,
+  "yaml.schemaStore.enable": false,
+  "java.compile.nullAnalysis.mode": "automatic"
+}
+// ./gradlew build
+// ./gradlew bootRun

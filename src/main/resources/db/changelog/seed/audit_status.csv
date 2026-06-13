@@ -1,0 +1,7 @@
+id,code,name
+1,DRAFT,Draft
+2,SUBMITTED,Submitted
+3,IN_REVIEW,In Review
+4,APPROVED,Approved
+5,REJECTED,Rejected
+6,CLOSED,Closed

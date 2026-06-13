@@ -1,0 +1,5 @@
+id,code,name
+1,ADMIN,Administrator
+2,AUDITOR,Auditor
+3,APPROVER,Approver
+4,USER,User
