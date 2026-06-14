@@ -384,6 +384,11 @@ Storage Service Interface
 Local Storage
 
 S3 Ready Design
+
+Presigned URLs
+
+Virus scanning
+
 ```
 
 Status:
@@ -561,3 +566,14 @@ Topics:
 ```
 
 Once that is defined, every future entity in every project follows the same enterprise standard.
+
+Phase 2 — Storage
+
+🟢 ~90% complete
+
+Remaining:
+FileStatus
+Cleanup job
+Ownership checks
+Validation
+Audit log

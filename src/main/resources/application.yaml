@@ -1,10 +1,14 @@
 spring:
   application:
     name: auditflow
-    
+
   docker:
     compose:
       enabled: false
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 110MB
 
   jpa:
     open-in-view: false
@@ -52,11 +56,20 @@ logging:
     liquibase: INFO
 
 app:
+  storage:
+    provider: local
+    path: data/uploads
+    max-file-size-mb: 20
+
+    allowed-content-types:
+      - image/png
+      - image/jpeg
+      - application/pdf
   jwt:
     issuer: auditflow
     access-token-expiration-minutes: 15
     refresh-token-expiration-days: 30
-    
+
     private-key-path: ${JWT_PRIVATE_KEY_PATH}
     public-key-path: ${JWT_PUBLIC_KEY_PATH}
 

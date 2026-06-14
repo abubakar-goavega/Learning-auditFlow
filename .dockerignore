@@ -1,0 +1,45 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# Gradle
+.gradle
+build
+
+# Logs
+logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.*
+
+# Generated keys/certs
+src/main/resources/keys
+nginx/certs
+
+# Documentation
+README.md
+docs
+
+# Testing
+coverage
+reports
+
+# Docker
+docker-compose*.yml
+
+# Scripts
+scripts/*
+
+## data ##
+data/*

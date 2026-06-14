@@ -26,6 +26,10 @@ dependencies {
 	implementation("org.liquibase:liquibase-core")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.16")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	// only for learning purpose
+	implementation(platform("software.amazon.awssdk:bom:2.46.10"))
+	implementation("software.amazon.awssdk:s3")
+
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	developmentOnly("org.springframework.boot:spring-boot-docker-compose")

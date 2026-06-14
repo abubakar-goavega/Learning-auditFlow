@@ -1,64 +1,50 @@
+# docker/docker-compose.local.yml
 name: auditflow
 
 services:
-  auditflow-api:
-    build:
-      context: ..
-      dockerfile: Dockerfile
 
-    container_name: auditflow-api
-    restart: unless-stopped
-
-    env_file:
-      - ../.env
-
-    expose:
-      - "8080"
-
+  minio:
+    image: minio/minio:latest
+    container_name: auditflow-s3
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web console
+    volumes:
+      - minio_data:/data
     networks:
       - auditflow_net
-
 
   modsecurity:
     image: owasp/modsecurity-crs:nginx
     container_name: auditflow-waf
     restart: unless-stopped
-
     environment:
-      BACKEND: http://auditflow-api:8080
-      BLOCKING_PARANOIA: 1
-      ANOMALY_INBOUND: 10
-
-    depends_on:
-      - auditflow-api
-
-    expose:
-      - "8080"
-
+      BACKEND: http://host.docker.internal:8080
+    ports:
+      - "8081:8080"
     networks:
       - auditflow_net
-
 
   nginx:
     image: nginx:alpine
     container_name: auditflow-nginx
     restart: unless-stopped
-
     ports:
       - "80:80"
       - "443:443"
-
     volumes:
       - ../nginx/conf.d:/etc/nginx/conf.d
       - ../nginx/certs:/etc/nginx/certs:ro
-
-    depends_on:
-      - modsecurity
-
     networks:
       - auditflow_net
 
-
+volumes:
+  minio_data:
+  
 networks:
   auditflow_net:
     driver: bridge
