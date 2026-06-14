@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
+import java.util.List;
 
 @Service
 @Transactional
@@ -19,6 +20,10 @@ public class SessionService {
             SessionRepository sessionRepository) {
 
         this.sessionRepository = sessionRepository;
+    }
+
+    public List<Session> getActiveSessions(Long userId) {
+        return sessionRepository.findByUserIdAndRevokedFalse(userId);
     }
 
     public Session create(
@@ -41,9 +46,8 @@ public class SessionService {
 
         Session session = sessionRepository
                 .findById(sessionId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Session not found"));
 
         if (session.isRevoked()) {
             throw new IllegalStateException(

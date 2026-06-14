@@ -78,7 +78,7 @@ public class SecurityConfig {
                                  *
                                  * Not commonly used for modern APIs.
                                  */
-                                .httpBasic(Customizer.withDefaults())
+                                .httpBasic(httpBasic -> httpBasic.disable())
 
                                 /*
                                  * Session Management
@@ -121,11 +121,12 @@ public class SecurityConfig {
                                                 .requestMatchers(
                                                                 "/",
                                                                 "/about",
-                                                                "/auth/**"
-                                                )
+                                                                "/auth/login",
+                                                                "/auth/refresh",
+                                                                "/auth/password/**")
                                                 .permitAll()
 
-                                                .requestMatchers("/admin")
+                                                .requestMatchers("/admin/**")
                                                 .hasRole("ADMIN")
 
                                                 .anyRequest()
@@ -139,14 +140,8 @@ public class SecurityConfig {
                         CustomUserDetailsService userDetailsService,
                         PasswordEncoder passwordEncoder) {
 
-                DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
-                provider.setUserDetailsService(
-                                userDetailsService);
-
-                provider.setPasswordEncoder(
-                                passwordEncoder);
-
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+                provider.setPasswordEncoder(passwordEncoder);
                 return provider;
         }
 

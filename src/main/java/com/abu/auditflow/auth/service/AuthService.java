@@ -15,8 +15,11 @@ import com.abu.auditflow.auth.entity.RefreshToken;
 import com.abu.auditflow.auth.entity.Session;
 import com.abu.auditflow.auth.security.jwt.JwtService;
 import com.abu.auditflow.auth.security.userdetails.CustomUserDetails;
+import com.abu.auditflow.common.util.IpUtils;
 import com.abu.auditflow.user.dto.UserDto;
 import com.abu.auditflow.user.service.UserService;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 @Transactional
@@ -42,8 +45,8 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public LoginResponse login(LoginRequest request) {
-        
+    public LoginResponse login(LoginRequest request, HttpServletRequest httpRequest) {
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.username(), request.password()));
 
@@ -51,7 +54,10 @@ public class AuthService {
         Long userId = user.getId();
         String accessToken = jwtService.generateAccessToken(userId, user.getUsername(), user.getRole());
 
-        Session session = sessionService.create(userId, null, null);
+        String userAgent = httpRequest.getHeader("User-Agent");
+        String clientIp = IpUtils.getClientIp(httpRequest);
+
+        Session session = sessionService.create(userId, userAgent, clientIp);
 
         RefreshToken refreshToken = refreshTokenService.create(userId, session.getId());
 
@@ -64,16 +70,26 @@ public class AuthService {
 
     public RefreshTokenResponse refresh(RefreshTokenRequest request) {
 
-        RefreshToken refreshToken = refreshTokenService.validate(request.refreshToken());
-        Session session = sessionService.validate(refreshToken.getSessionId());
-        sessionService.touch(session.getId());
+        RefreshToken oldToken = refreshTokenService.validate(request.refreshToken());
 
-        UserDto user = userService.getUser(refreshToken.getUserId());
+        sessionService.validate(oldToken.getSessionId());
+        sessionService.touch(oldToken.getSessionId());
+
+        // REVOKE OLD TOKEN (THIS IS MISSING)
+        refreshTokenService.revoke(request.refreshToken());
+
+        // CREATE NEW REFRESH TOKEN
+        RefreshToken newToken = refreshTokenService.create(oldToken.getUserId(), oldToken.getSessionId());
+
+        UserDto user = userService.getUserById(oldToken.getUserId());
+
         String accessToken = jwtService.generateAccessToken(
                 user.id(), user.username(), user.roleCode());
 
         return new RefreshTokenResponse(
-                user.id(), accessToken, "Bearer", 900);
+                user.id(),accessToken,"Bearer",900,
+                newToken.getToken().toString()
+        );
     }
 
     public void logout(String refreshTokenStr) {

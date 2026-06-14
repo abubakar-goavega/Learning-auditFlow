@@ -8,6 +8,8 @@ import com.abu.auditflow.auth.dto.UserResponse;
 import com.abu.auditflow.auth.security.userdetails.CustomUserDetails;
 import com.abu.auditflow.auth.service.AuthService;
 import com.abu.auditflow.common.dto.ApiResponse;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import java.util.Map;
@@ -46,8 +48,10 @@ public class AuthController {
         }
 
         @PostMapping("/login")
-        public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request) {
-                return ApiResponse.success("Login successful", authService.login(request));
+        public ApiResponse<LoginResponse> login(@RequestBody LoginRequest request, 
+                HttpServletRequest httpRequest) {
+                return ApiResponse.success("Login successful", 
+                authService.login(request, httpRequest));
         }
 
         @PostMapping("/refresh")

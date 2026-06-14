@@ -10,20 +10,19 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.abu.auditflow.auth.entity.RefreshToken;
+import com.abu.auditflow.auth.entity.PasswordResetToken;
 
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
-    Optional<RefreshToken> findByToken(UUID token);
+public interface PasswordResetTokenRepository
+        extends JpaRepository<PasswordResetToken, Long> {
 
-    void deleteByUserId(Long userId);
+    Optional<PasswordResetToken> findByToken(UUID token);
 
-    List<RefreshToken> findByUserId(Long userId);
+    List<PasswordResetToken> findByUserId(Long userId);
 
     @Modifying
     @Query("""
-            DELETE FROM RefreshToken rt
-            WHERE rt.expiresAt < :now
+            DELETE FROM PasswordResetToken p
+            WHERE p.expiresAt < :now
             """)
-    void deleteExpiredTokens(@Param("now") Instant now);
-
+    void deleteExpired(@Param("now") Instant now);
 }

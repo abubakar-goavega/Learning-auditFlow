@@ -96,7 +96,7 @@ public class RefreshTokenService {
                                 .deleteByUserId(userId);
         }
 
-        @Transactional
+        
         public void revoke(String token) {
                 RefreshToken refreshToken = validate(token);
 

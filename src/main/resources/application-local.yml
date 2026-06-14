@@ -1,8 +1,4 @@
-spring:
-  security.user:
-    name: admin
-    password: admin
-    
+spring:  
   liquibase:
     contexts: local
     
