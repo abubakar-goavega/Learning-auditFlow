@@ -1,4 +1,4 @@
-package com.abu.auditflow.root.controller;
+package com.abu.auditflow.common.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

@@ -71,8 +71,7 @@ public class PasswordResetService {
             throw new RuntimeException("Token expired");
         }
 
-        User user = userService.findEntityById(resetToken.getUserId());
-        Long userId = user.getId();
+        Long userId = resetToken.getUserId();
 
         if (userId == null) {
             throw new IllegalStateException("User ID cannot be null");

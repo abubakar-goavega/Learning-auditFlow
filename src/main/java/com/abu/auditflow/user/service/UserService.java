@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.abu.auditflow.exception.ResourceNotFoundException;
+import com.abu.auditflow.role.entity.Role;
+import com.abu.auditflow.role.repository.RoleRepository;
 import com.abu.auditflow.user.dto.CreateUserRequest;
 import com.abu.auditflow.user.dto.UpdateUserRequest;
 import com.abu.auditflow.user.dto.UserDto;
@@ -25,23 +27,39 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
-            UserMapper userMapper, PasswordEncoder passwordEncoder) {
+            RoleRepository roleRepository,
+            UserMapper userMapper,
+            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDto createUser(CreateUserRequest request) {
+    private Role resolveRole(CreateUserRequest request) {
 
+        if (request.roleId() != null) {
+            return roleRepository.findById(request.roleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+        }
+
+        return roleRepository.findByCode("USER")
+                .orElseThrow(() -> new ResourceNotFoundException("Default role USER not found"));
+    }
+
+    public UserDto createUser(CreateUserRequest request) {
+        Role role = resolveRole(request);
         User user = new User();
         user.setUsername(request.username());
         user.setEmail(request.email());
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setEnabled(true);
+        user.setRole(role);
 
         User saved = userRepository.save(user);
 

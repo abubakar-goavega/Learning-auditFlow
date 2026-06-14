@@ -19,4 +19,17 @@
                 tableName="users"/>
 
     </changeSet>
+    <changeSet id="009-sync-sequences" author="abubakar">
+    <sql>
+        SELECT setval(
+            pg_get_serial_sequence('auth.users', 'id'),
+            (SELECT MAX(id) FROM auth.users)
+        );
+
+        SELECT setval(
+            pg_get_serial_sequence('auth.roles', 'id'),
+            (SELECT MAX(id) FROM auth.roles)
+        );
+    </sql>
+    </changeSet>
 </databaseChangeLog>

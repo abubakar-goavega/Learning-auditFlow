@@ -21,17 +21,17 @@ import lombok.RequiredArgsConstructor;
 public class SessionController {
     private final SessionService sessionService;
 
-    @GetMapping("/sessions")
+    @GetMapping("/")
     public List<Session> getSessions(@AuthenticationPrincipal CustomUserDetails user) {
         return sessionService.getActiveSessions(user.getId());
     }
 
-    @DeleteMapping("/sessions/{sessionId}")
+    @DeleteMapping("/{sessionId}")
     public void revokeSession(@PathVariable Long sessionId) {
         sessionService.revoke(sessionId);
     }
 
-    @DeleteMapping("/sessions/all")
+    @DeleteMapping("/all")
     public void revokeAll(@AuthenticationPrincipal CustomUserDetails user) {
         sessionService.revokeAll(user.getId());
     }
